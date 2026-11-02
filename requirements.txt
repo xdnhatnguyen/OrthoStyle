@@ -1,0 +1,26 @@
+# Core Deep Learning Framework
+torch>=2.1.0
+torchvision>=0.16.0
+accelerate>=0.28.0
+
+# Diffusion & Foundation Models
+diffusers>=0.27.0
+transformers>=4.38.0
+huggingface_hub>=0.20.0
+safetensors>=0.4.0
+
+# Vision, Image Processing & Gating
+timm==0.6.13
+rembg>=2.0.50
+opencv-python>=4.8.0
+pillow>=10.0.0
+kornia>=0.7.0
+
+# Mathematical, Attention & Tensor Utilities
+numpy>=1.24.0
+scipy>=1.10.0
+einops>=0.7.0
+ftfy>=6.1.0
+PyYAML>=6.0.0
+tqdm>=4.65.0
+
