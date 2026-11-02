@@ -1,0 +1,11 @@
+# Ignore internal development notes & scratch files
+figs/
+Code.md
+RULES.md
+scratch_test_cm.png
+test_verification.py
+__pycache__/
+*.pyc
+.gemini/
+.idea/
+.vscode/

@@ -1,0 +1,1005 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="OrthoStyle: Manifold-Preserving Training-Free Style Transfer via Score-Orthogonal Guidance." />
+  <title>OrthoStyle: Manifold-Preserving Training-Free Style Transfer (SOICT 2026 Oral)</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=6" />
+</head>
+<body>
+
+  <!-- Scroll Progress Bar -->
+  <div id="progress-bar" style="width: 0%;"></div>
+
+  <!-- Sticky Navbar -->
+  <nav id="navbar" aria-label="Main Navigation">
+    <div class="nav-inner">
+      <a href="#top" class="nav-brand"><span>OrthoStyle</span> — SOICT 2026 ⭐ Oral Presentation</a>
+      <div class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#demo">Demo</a>
+        <a href="#method">Method</a>
+        <a href="#quantitative">Benchmark</a>
+        <a href="#analysis">Analysis</a>
+        <a href="#ablation">Ablation</a>
+        <a href="#bibtex">BibTeX</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ════════════ HERO SECTION (Spacious & Clean) ════════════ -->
+  <header class="hero" id="top">
+    <div class="hero-dots"></div>
+    <div class="container">
+      <p class="venue">SOICT 2026</p>
+      <div class="highlight-badge">⭐ Oral Presentation · SOICT 2026</div>
+      <h1><span class="brand">OrthoStyle:</span> Manifold-Preserving Training-Free Style Transfer via Score-Orthogonal Guidance</h1>
+      <p class="subtitle">A training-free framework balancing style fidelity and content preservation without network fine-tuning or DDIM inversion.</p>
+      
+      <div class="authors-line">
+        <a href="#">Minh Nhat Nguyen</a><sup>1,2</sup> · 
+        <a href="#">Dang Quang Pham</a><sup>1,2</sup> · 
+        <a href="#">Thien Phuc Vo</a><sup>1,2</sup> · 
+        <a href="#">Phuc Loc Dang</a><sup>1,2</sup> · 
+        <a href="#">Duc Khoan Le</a><sup>1,2*</sup>
+      </div>
+      <p class="affil-line">
+        <sup>1</sup>Faculty of Information Technology, University of Science, Ho Chi Minh City, Vietnam<br>
+        <sup>2</sup>Vietnam National University, Ho Chi Minh City, Vietnam<br>
+        <span style="font-size: 12.5px; opacity: 0.85;">*Corresponding author: <code>ldkhoan@fit.hcmus.edu.vn</code></span>
+      </p>
+
+      <!-- Stat Pills with Counter Animation -->
+      <div class="hero-stats">
+        <div class="hpill">
+          <div class="pn count-up" data-target="25.8" data-prefix="+" data-suffix="%" data-decimals="1">+25.8%</div>
+          <div class="pl">Style fidelity vs. RBM</div>
+        </div>
+        <div class="hpill">
+          <div class="pn count-up" data-target="79.87" data-suffix="" data-decimals="2">79.87</div>
+          <div class="pl">CLIP-I preservation ↑</div>
+        </div>
+        <div class="hpill">
+          <div class="pn count-up" data-target="0" data-suffix=" Steps">0 Steps</div>
+          <div class="pl">Tuning / inversion-free</div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="btn-row">
+        <a class="btn-pill" href="SOICT_2026_OthorStyle.pdf" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"></path></svg>
+          Paper (PDF)
+        </a>
+        <a class="btn-pill" href="https://github.com/xdnhatnguyen/OrthoStyle" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"></path></svg>
+          Code
+        </a>
+        <a class="btn-pill" href="#demo">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+          Live Demo
+        </a>
+        <a class="btn-pill" href="#bibtex">
+          <svg viewBox="0 0 24 24"><path d="M14 17h4v2h-4zm0-7h4v5h-4zm-8 7h4v2H6zm0-4h4v2H6zm0-3h4v2H6zm0-4h4v2H6zm14-2H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 16H4V5h16v14z"></path></svg>
+          BibTeX
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ════════════ OVERVIEW SECTION (TEASER FIGURE) ════════════ -->
+  <section id="overview" class="section teaser-section">
+    <div class="container wide">
+      <h2 class="sec-title reveal up">Overview</h2>
+      <div class="divider-line reveal up"></div>
+      <p class="sec-sub reveal up">Qualitative stylization matrix demonstrating OrthoStyle across diverse semantic domains and contrasting artistic genres under null-prompt inference.</p>
+
+      <div class="fig-block reveal up" data-lb="assets/figures/qualitative_matrix_teaser.webp" data-lb-cap="Fig. 1. Qualitative stylization matrix of OrthoStyle across diverse content categories and artistic styles under null-prompt inference.">
+        <img src="assets/figures/qualitative_matrix_teaser.webp" alt="OrthoStyle Qualitative Matrix Teaser" />
+        <p class="fig-cap"><b>Fig. 1. Qualitative stylization matrix of OrthoStyle.</b> Rows show diverse content targets; columns correspond to artistic styles under null-prompt inference. Preserves subject geometry while capturing authentic textures without semantic leakage. <em>Click image to zoom.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ ABSTRACT ════════════ -->
+  <section id="abstract">
+    <div class="container">
+      <h2 class="sec-title reveal up">Abstract</h2>
+      <div class="divider-line reveal up"></div>
+      <div class="abstract-box reveal up">
+        <p class="abstract-text">
+          Reference-based style transfer with diffusion models aims to synthesize artistic textures while preserving the geometry and semantics of a target image. However, training-free methods face a trade-off between style fidelity and content preservation: strong style injection can distort structure and cause content leakage, while conservative transfer often leads to under-stylization.
+        </p>
+        <br>
+        <p class="abstract-text">
+          We introduce <strong>OrthoStyle</strong>, a training-free framework that addresses this trade-off without network fine-tuning or DDIM inversion. OrthoStyle consists of three complementary components: <em>Semantic Gating</em> to preserve structural and semantic cues; <em>Score-Orthogonal DINO Guidance</em> to project style gradients orthogonally to the diffusion score direction, preserving the sampling trajectory near the data manifold; and an <em>Early Step Controller</em> that applies AdaIN-based clean-latent pushforward to establish color and layout before fine-grained stylization.
+        </p>
+        <br>
+        <p class="abstract-text">
+          Extensive quantitative and qualitative comparisons with both OC-based baselines and representative stylization methods show that OrthoStyle achieves a favorable balance between style fidelity and content preservation while maintaining structural consistency. Most notably, it completely outperforms the baseline that uses the same Stable Cascade backbone.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ KEY RESULTS HIGHLIGHTS ════════════ -->
+  <section id="key-results">
+    <div class="container">
+      <h2 class="sec-title reveal up">Key results at a glance</h2>
+      <div class="divider-line reveal up"></div>
+      <p class="sec-sub reveal up">Evaluated on the 225 content-style cross-paired benchmark under rigorous null-prompt conditioning.</p>
+      
+      <div class="results-strip">
+        <div class="rcard reveal up" style="transition-delay: 0s;">
+          <div class="rn count-up" data-target="39.49" data-suffix="" data-decimals="2">39.49</div>
+          <div class="rl">CSD style fidelity ↑</div>
+          <div class="rd"><b>+25.8%</b> improvement over RB-Modulation (31.38) on the same Stable Cascade backbone, rendering vibrant brushwork and textures.</div>
+        </div>
+        <div class="rcard reveal up" style="transition-delay: 0.1s;">
+          <div class="rn count-up" data-target="79.87" data-suffix="" data-decimals="2">79.87</div>
+          <div class="rl">CLIP-I preservation ↑</div>
+          <div class="rd"><b>Highest content score</b> among all stylization methods, surpassing InstantStyle (68.27) and DiffuseIT (68.28) by <b>+11.6 points</b>.</div>
+        </div>
+        <div class="rcard reveal up" style="transition-delay: 0.2s;">
+          <div class="rn count-up" data-target="26.41" data-suffix="" data-decimals="2">26.41</div>
+          <div class="rl">DCL semantic leakage ↓</div>
+          <div class="rd">Significantly lower leakage than InstantStyle (36.49) and DiffuseIT (42.69); ensures reference objects do not bleed into content.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ INTERACTIVE DEMO ════════════ -->
+  <section id="demo" style="background:#fff;">
+    <div class="container wide">
+      <h2 class="sec-title reveal up">Interactive Demo</h2>
+      <div class="divider-line reveal up"></div>
+      <p class="sec-sub reveal up">Select any <strong>Content Image</strong> (1 of 15) and <strong>Style Image</strong> (1 of 15). The page dynamically retrieves the precomputed stylization result from all 225 combinations — 100% static & serverless.</p>
+
+      <div class="demo-shell reveal up">
+        <div class="demo-controls">
+          <div class="selector-block">
+            <div class="selector-title-row">
+              <div>
+                <span class="step-badge">1</span>
+                <h3>Content image</h3>
+              </div>
+              <span class="selection-mode">15 options · Single select</span>
+            </div>
+            <div class="thumb-grid" id="content-grid" aria-label="Content image choices"></div>
+          </div>
+
+          <div class="selector-block">
+            <div class="selector-title-row">
+              <div>
+                <span class="step-badge">2</span>
+                <h3>Style reference</h3>
+              </div>
+              <span class="selection-mode">15 styles · Single select</span>
+            </div>
+            <div class="thumb-grid style-grid" id="style-grid" aria-label="Style image choices"></div>
+          </div>
+
+          <div class="demo-actions">
+            <button id="clear-btn" class="btn-act btn-secondary" type="button">Clear selection</button>
+            <button id="generate-btn" class="btn-act btn-primary" type="button" disabled>✨ Generate result</button>
+          </div>
+        </div>
+
+          <div class="result-panel" id="result-panel">
+          <div class="result-placeholder" id="result-placeholder">
+            <div class="placeholder-icon">✦</div>
+            <p id="status-title">Choose a content and style above</p>
+            <span id="status-detail">Click any thumbnail from Step 1 and Step 2, then hit <strong>Generate result</strong> to view the precomputed stylized output.</span>
+          </div>
+
+          <div class="result-view hidden" id="result-view">
+            <div class="result-canvas" id="canvas-wrapper" title="Click to view full size in Lightbox">
+              <img id="result-image" alt="Precomputed stylized output" />
+            </div>
+          </div>
+
+          <div class="loading-overlay hidden" id="loading-overlay" aria-live="polite">
+            <div class="loading-card">
+              <div class="spinner"></div>
+              <div class="loading-copy">
+                <strong id="loading-title">Synthesizing stylization…</strong>
+                <span id="loading-subtitle">Applying score-orthogonal guidance</span>
+              </div>
+              <div class="progress-track" aria-hidden="true">
+                <div class="progress-bar" id="progress-bar-demo"></div>
+              </div>
+              <div class="progress-meta">
+                <span id="progress-label">0%</span>
+                <span>Precomputed cache</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="demo-note">⚡ All 225 pairwise combinations (15 contents × 15 styles) are pre-rendered and verified. Zero GPU or backend server required.</p>
+    </div>
+  </section>
+
+  <!-- ════════════ METHODOLOGY ════════════ -->
+  <section id="method">
+    <div class="container wide">
+      <h2 class="sec-title reveal up">Methodology</h2>
+      <div class="divider-line teal reveal up"></div>
+      <p class="sec-sub reveal up">A training-free three-pillar architecture eliminating DDIM inversion and network fine-tuning. <em>Hover or click any card to reveal details.</em></p>
+
+      <div class="fig-block reveal up" data-lb="assets/figures/pipeline.webp" data-lb-cap="Fig. 2. Overview of the OrthoStyle pipeline: semantic gating, score-orthogonal DINO guidance, and early-step controller.">
+        <img src="assets/figures/pipeline.webp" alt="OrthoStyle Overall Pipeline Architecture" />
+        <p class="fig-cap"><b>Fig. 2. Overall pipeline of OrthoStyle.</b> Given content <i>I<sub>c</sub></i> and style <i>I<sub>s</sub></i>, OrthoStyle coordinates semantic gating (refined foreground edges), score-orthogonal DINO guidance (manifold-preserving trajectory), and an early-step controller (clean-latent AdaIN pushforward) for zero-shot stylization. <em>Click to zoom.</em></p>
+      </div>
+
+      <!-- Interactive Method Cards -->
+      <div class="method-grid">
+        <div class="mcard reveal up" style="transition-delay: 0s;" data-expand="">
+          <span class="tag">① Semantic Gating</span>
+          <h3>Structural prior without clutter</h3>
+          <p>Extracts Canny edge maps and automatically removes the smallest 20% of detected edges using salient foreground segmentation masks, preventing background clutter from over-constraining stylization.</p>
+          <div class="mcard-extra">
+            <p><b>Mechanism:</b> Raw Canny edge maps capture noisy background textures that restrict artistic brushstrokes. Semantic Gating focuses structural guidance strictly on the salient subject contours, keeping clean spatial layout while unlocking freedom for style textures.</p>
+          </div>
+          <span class="expand-hint">▾ Hover or click for detailed explanation</span>
+        </div>
+
+        <div class="mcard orange reveal up" style="transition-delay: 0.1s;" data-expand="">
+          <span class="tag">② Score-Orthogonal Guidance</span>
+          <h3>Project gradients to tangent manifold</h3>
+          <p>Standard external gradients frequently oppose the diffusion score, destabilizing the trajectory. OrthoStyle projects DINO style gradients orthogonally to the diffusion score direction.</p>
+          <div class="mcard-extra">
+            <p><b>Mechanism:</b> We compute ∇<sub><i>x<sub>t</sub></i></sub> <span style="font-family:serif; font-style:italic;">L</span><sub>style</sub> via Tweedie estimation and subtract its parallel projection along the score vector <i>s<sub>θ</sub></i>(<i>x<sub>t</sub></i>, <i>t</i>). This minimizes denoising interference, completely eliminating the structural collapse common in unconstrained guidance.</p>
+          </div>
+          <span class="expand-hint">▾ Hover or click for detailed explanation</span>
+        </div>
+
+        <div class="mcard teal reveal up" style="transition-delay: 0.2s;" data-expand="">
+          <span class="tag">③ Early-Step Controller</span>
+          <h3>Clean-latent AdaIN pushforward</h3>
+          <p>Applies AdaIN normalization to Tweedie-predicted clean latents <i>x̂</i><sub>0</sub> exclusively during early diffusion timesteps <i>t</i> ∈ [<i>τ</i>, <i>T</i>], establishing global palette and texture distribution.</p>
+          <div class="mcard-extra">
+            <p><b>Mechanism:</b> Diffusion sampling develops global structure in early steps and fine details in late steps. By pushing clean latents toward style statistics during early steps only, OrthoStyle locks in palette harmony without disrupting late-stage geometric rendering.</p>
+          </div>
+          <span class="expand-hint">▾ Hover or click for detailed explanation</span>
+        </div>
+
+        <div class="mcard purple reveal up" style="transition-delay: 0.3s;" data-expand="">
+          <span class="tag">④ Blended Style Tokens</span>
+          <h3>Cross-attention leakage suppression</h3>
+          <p>Blends style prompt representations with mean style embeddings with interpolation weight <i>α<sub>s</sub></i> = 0.85, preventing reference subject elements from leaking into content.</p>
+          <div class="mcard-extra">
+            <p><b>Mechanism:</b> Raw style token embeddings frequently encode both style texture and the semantic identity of the reference subject. Blending with mean-pooled tokens neutralizes semantic identity while retaining high-fidelity artistic brush dynamics.</p>
+          </div>
+          <span class="expand-hint">▾ Hover or click for detailed explanation</span>
+        </div>
+      </div>
+
+      <!-- Cross Attention Module -->
+      <div class="fig-block reveal up" style="margin-top: 40px;" data-lb="assets/figures/cross-attn.webp" data-lb-cap="Fig. 3. Cross-attention module & semantic gated edge map schematic.">
+        <img src="assets/figures/cross-attn.webp" alt="Cross-Attention Guidance Architecture" />
+        <p class="fig-cap"><b>Fig. 3. Cross-attention control & semantic edge filtering.</b> Detailed schematic of cross-attention modulation ensuring semantic structure preservation alongside edge-gated guidance. <em>Click to zoom.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ QUANTITATIVE BENCHMARK ════════════ -->
+  <section id="quantitative">
+    <div class="container wide">
+      <h2 class="sec-title reveal up">Quantitative benchmark (225 pairs)</h2>
+      <div class="divider-line reveal up"></div>
+      <p class="sec-sub reveal up">Comprehensive evaluation across five standard metrics covering style fidelity, content preservation, and leakage prevention. <em>Hover over rows or table to inspect details.</em></p>
+
+      <!-- Table Category Tabs -->
+      <div class="table-tabs reveal up">
+        <button class="table-tab active" data-group="all">All Methods</button>
+        <button class="table-tab" data-group="stylization">Stylization Baselines</button>
+        <button class="table-tab" data-group="oc">Optimal-Control Baselines</button>
+      </div>
+
+      <div class="table-wrap reveal up" id="quant-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th rowspan="2" style="vertical-align: middle;">Method</th>
+              <th colspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.25);">Style Fidelity</th>
+              <th colspan="2" style="border-bottom: 1px solid rgba(255,255,255,0.25);">Content Preservation</th>
+              <th rowspan="2" style="vertical-align: middle;">Leakage<br><span style="font-size:11px; font-weight:normal; opacity:0.85;">DCL ↓</span></th>
+            </tr>
+            <tr>
+              <th>CSD ↑</th>
+              <th>DINO ↑</th>
+              <th>CLIP-I ↑</th>
+              <th>LPIPS ↓</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Stylization Methods Header -->
+            <tr class="tr-subhead tr-group-stylization">
+              <td colspan="6">Stylization Methods</td>
+            </tr>
+            <tr class="tr-ours tr-group-stylization">
+              <td><strong>OrthoStyle (Ours)</strong></td>
+              <td>39.49</td>
+              <td>23.86</td>
+              <td class="best"><strong>79.87</strong></td>
+              <td>56.22</td>
+              <td class="second-best"><u>26.41</u></td>
+            </tr>
+            <tr class="tr-group-stylization">
+              <td>StyleID</td>
+              <td class="second-best"><u>45.11</u></td>
+              <td>26.95</td>
+              <td class="second-best"><u>77.32</u></td>
+              <td class="second-best"><u>45.97</u></td>
+              <td>27.05</td>
+            </tr>
+            <tr class="tr-group-stylization">
+              <td>AttenST</td>
+              <td>41.44</td>
+              <td>24.80</td>
+              <td>77.17</td>
+              <td class="best"><strong>43.47</strong></td>
+              <td class="best"><strong>26.07</strong></td>
+            </tr>
+            <tr class="tr-group-stylization">
+              <td>DiffuseIT</td>
+              <td>31.90</td>
+              <td class="best"><strong>32.11</strong></td>
+              <td>68.28</td>
+              <td>54.43</td>
+              <td>42.69</td>
+            </tr>
+            <tr class="tr-group-stylization">
+              <td>InstantStyle</td>
+              <td class="best"><strong>47.67</strong></td>
+              <td class="second-best"><u>27.80</u></td>
+              <td>68.27</td>
+              <td>61.55</td>
+              <td>36.49</td>
+            </tr>
+
+            <!-- OC-Based Methods Header -->
+            <tr class="tr-subhead tr-group-oc">
+              <td colspan="6">OC-Based Methods</td>
+            </tr>
+            <tr class="tr-ours tr-group-oc">
+              <td><strong>OrthoStyle (Ours)</strong></td>
+              <td class="best"><strong>39.49</strong></td>
+              <td class="best"><strong>23.86</strong></td>
+              <td>79.87</td>
+              <td class="second-best"><u>56.22</u></td>
+              <td class="second-best"><u>26.41</u></td>
+            </tr>
+            <tr class="tr-group-oc">
+              <td>ITOC</td>
+              <td>14.62</td>
+              <td>16.04</td>
+              <td class="best"><strong>86.57</strong></td>
+              <td class="best"><strong>33.86</strong></td>
+              <td class="best"><strong>19.39</strong></td>
+            </tr>
+            <tr class="tr-group-oc">
+              <td>RB-Modulation</td>
+              <td class="second-best"><u>31.38</u></td>
+              <td class="second-best"><u>19.13</u></td>
+              <td class="second-best"><u>81.69</u></td>
+              <td>68.09</td>
+              <td>28.81</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note reveal up">
+        Quantitative comparison on the 225-pair benchmark. Best and second-best results within each baseline category are shown in <strong>bold</strong> and <u>underlined</u>, respectively. CSD & DINO measure style fidelity; CLIP-I & LPIPS evaluate content preservation; DCL (Directional Content Leakage) measures reference semantic bleeding. All synthesized under identical null-prompt inference.
+      </p>
+    </div>
+  </section>
+
+  <!-- ════════════ PERCEPTUAL & BACKBONE ADVANTAGE (USER STUDY STYLE) ════════════ -->
+  <section id="advantage" style="background:#fff;">
+    <div class="container wide">
+      <h2 class="sec-title reveal up">Perceptual & backbone superiority</h2>
+      <div class="divider-line purple reveal up"></div>
+      <p class="sec-sub reveal up">Relative performance gains on the Stable Cascade backbone and against leading training-free baselines.</p>
+
+      <div class="study-grid reveal up">
+        <div class="scard" style="transition-delay: 0s;">
+          <div class="sn count-up" data-target="25.8" data-prefix="+" data-suffix="%" data-decimals="1">+25.8%</div>
+          <div class="sl">Style fidelity boost</div>
+          <div class="ring-wrap">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle class="ring-bg" cx="40" cy="40" r="35"></circle>
+              <circle class="ring-fg" cx="40" cy="40" r="35" data-pct="84.2"></circle>
+            </svg>
+            <div class="ring-label">+25.8%</div>
+          </div>
+          <p style="font-size: 12px; color: var(--text-light); margin-top: 8px;">CSD 39.49 vs. 31.38 over RB-Modulation</p>
+        </div>
+
+        <div class="scard" style="transition-delay: 0.1s;">
+          <div class="sn count-up" data-target="17.0" data-prefix="+" data-suffix="%" data-decimals="1">+17.0%</div>
+          <div class="sl">Content preservation</div>
+          <div class="ring-wrap">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle class="ring-bg" cx="40" cy="40" r="35"></circle>
+              <circle class="ring-fg purple" cx="40" cy="40" r="35" data-pct="79.9"></circle>
+            </svg>
+            <div class="ring-label">+17.0%</div>
+          </div>
+          <p style="font-size: 12px; color: var(--text-light); margin-top: 8px;">CLIP-I 79.87 vs. 68.27 InstantStyle</p>
+        </div>
+
+        <div class="scard" style="transition-delay: 0.2s;">
+          <div class="sn count-up" data-target="38.1" data-prefix="-" data-suffix="%" data-decimals="1">-38.1%</div>
+          <div class="sl">Leakage reduction</div>
+          <div class="ring-wrap">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle class="ring-bg" cx="40" cy="40" r="35"></circle>
+              <circle class="ring-fg teal" cx="40" cy="40" r="35" data-pct="85.5"></circle>
+            </svg>
+            <div class="ring-label">-38.1%</div>
+          </div>
+          <p style="font-size: 12px; color: var(--text-light); margin-top: 8px;">DCL dropped from 42.69 to 26.41</p>
+        </div>
+      </div>
+
+      <div class="study-note reveal up">
+        <strong>Head-to-head superiority on Stable Cascade:</strong> Compared directly with RB-Modulation sharing the identical Stable Cascade backbone, OrthoStyle substantially boosts style fidelity (CSD +8.11, DINO +4.73) while simultaneously reducing directional content leakage (DCL 28.81 → 26.41), proving that score-orthogonal guidance enables rich artistic transfer without compromising structural consistency.
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ VISUAL & TRADE-OFF ANALYSIS (INTERACTIVE VISUALIZATIONS) ════════════ -->
+  <section id="analysis">
+    <div class="container wide">
+      <h2 class="sec-title reveal up">Visual & Trade-off Analysis</h2>
+      <div class="divider-line reveal up"></div>
+      <p class="sec-sub reveal up">Interactive live plots reconstructed directly from the 225-pair benchmark data. Hover over data points, bars, and vertices to explore the trade-offs.</p>
+
+      <div class="analysis-grid">
+        
+        <!-- CARD 1: Interactive Style-Content Pareto Frontier -->
+        <div class="analysis-card reveal up">
+          <div class="card-header-row">
+            <h3>Style-Content Pareto Frontier</h3>
+          </div>
+          <p>OrthoStyle occupies the optimal sweet spot on the Pareto frontier between Content Preservation (CLIP-I) and Style Fidelity (DINO), avoiding both Content Collapse and Under-Stylization.</p>
+          
+          <div class="chart-stage" id="stage-pareto">
+            <!-- Interactive Live SVG Scatter Plot -->
+            <div class="interactive-chart-wrap" id="interactive-pareto">
+              <svg class="interactive-svg" viewBox="0 0 500 340" id="pareto-svg">
+                <defs>
+                  <filter id="glow-star" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur stdDeviation="3.5" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+
+                <!-- Grid lines -->
+                <line x1="50" y1="40" x2="470" y2="40" stroke="#f1f5f9" stroke-dasharray="3,3" />
+                <line x1="50" y1="105" x2="470" y2="105" stroke="#f1f5f9" stroke-dasharray="3,3" />
+                <line x1="50" y1="170" x2="470" y2="170" stroke="#f1f5f9" stroke-dasharray="3,3" />
+                <line x1="50" y1="235" x2="470" y2="235" stroke="#f1f5f9" stroke-dasharray="3,3" />
+                <line x1="50" y1="300" x2="470" y2="300" stroke="#cbd5e1" stroke-width="1.2" />
+
+                <line x1="50" y1="40" x2="50" y2="300" stroke="#cbd5e1" stroke-width="1.2" />
+                <line x1="134" y1="40" x2="134" y2="300" stroke="#f1f5f9" stroke-dasharray="3,3" />
+                <line x1="218" y1="40" x2="218" y2="300" stroke="#f1f5f9" stroke-dasharray="3,3" />
+                <line x1="302" y1="40" x2="302" y2="300" stroke="#f1f5f9" stroke-dasharray="3,3" />
+                <line x1="386" y1="40" x2="386" y2="300" stroke="#f1f5f9" stroke-dasharray="3,3" />
+                <line x1="470" y1="40" x2="470" y2="300" stroke="#f1f5f9" stroke-dasharray="3,3" />
+
+                <!-- Highlight Zones from pareto_plot.tex -->
+                <!-- Content Collapse Zone: x in [65, 71], y in [26, 34] -->
+                <rect x="50" y="40" width="100.8" height="104" fill="rgba(239, 68, 68, 0.08)" stroke="rgba(239, 68, 68, 0.25)" rx="4" />
+                <text x="56" y="56" fill="#ef4444" font-size="10" font-weight="700">Content Collapse</text>
+
+                <!-- Style Failure Zone: x in [80, 90], y in [14, 21] -->
+                <rect x="302" y="209" width="168" height="91" fill="rgba(100, 116, 139, 0.08)" stroke="rgba(100, 116, 139, 0.25)" rx="4" />
+                <text x="380" y="290" fill="#64748b" font-size="10" font-weight="700">Style Failure</text>
+
+                <!-- Sweet-spot Optimal Zone -->
+                <rect x="230" y="120" width="120" height="110" fill="rgba(99, 91, 255, 0.06)" stroke="rgba(99, 91, 255, 0.28)" stroke-dasharray="4,4" rx="8" />
+                <text x="240" y="136" fill="#7c3aed" font-size="10" font-weight="800">★ Optimal Trade-off</text>
+
+                <!-- Axis Labels & Ticks -->
+                <text x="50" y="318" fill="#64748b" font-size="10" text-anchor="middle">65</text>
+                <text x="134" y="318" fill="#64748b" font-size="10" text-anchor="middle">70</text>
+                <text x="218" y="318" fill="#64748b" font-size="10" text-anchor="middle">75</text>
+                <text x="302" y="318" fill="#64748b" font-size="10" text-anchor="middle">80</text>
+                <text x="386" y="318" fill="#64748b" font-size="10" text-anchor="middle">85</text>
+                <text x="470" y="318" fill="#64748b" font-size="10" text-anchor="middle">90</text>
+                <text x="260" y="336" fill="#334155" font-size="11" font-weight="700" text-anchor="middle">Content Preservation (CLIP-I ↑)</text>
+
+                <text x="42" y="304" fill="#64748b" font-size="10" text-anchor="end">14</text>
+                <text x="42" y="239" fill="#64748b" font-size="10" text-anchor="end">19</text>
+                <text x="42" y="174" fill="#64748b" font-size="10" text-anchor="end">24</text>
+                <text x="42" y="109" fill="#64748b" font-size="10" text-anchor="end">29</text>
+                <text x="42" y="44" fill="#64748b" font-size="10" text-anchor="end">34</text>
+                <text x="18" y="170" fill="#334155" font-size="11" font-weight="700" text-anchor="middle" transform="rotate(-90 18 170)">Style Fidelity (DINO ↑)</text>
+
+                <!-- Data Points from pareto_plot.tex -->
+                <!-- DiffuseIT: (68.28, 32.11) -> (105.1, 64.6) -->
+                <circle cx="105.1" cy="64.6" r="6" fill="#f97316" stroke="#fff" stroke-width="1.5" class="chart-pt" data-info="DiffuseIT | CLIP-I: 68.28, DINO: 32.11 (Content Collapse)" />
+                <text x="114" y="68" fill="#334155" font-size="10" font-weight="600">DiffuseIT</text>
+
+                <!-- InstantStyle: (68.27, 27.80) -> (104.9, 120.6) -->
+                <circle cx="104.9" cy="120.6" r="6" fill="#ea580c" stroke="#fff" stroke-width="1.5" class="chart-pt" data-info="InstantStyle | CLIP-I: 68.27, DINO: 27.80 (Content Collapse)" />
+                <text x="114" y="124" fill="#334155" font-size="10" font-weight="600">InstantStyle</text>
+
+                <!-- ITOC: (86.57, 16.04) -> (412.4, 273.5) -->
+                <circle cx="412.4" cy="273.5" r="6" fill="#64748b" stroke="#fff" stroke-width="1.5" class="chart-pt" data-info="ITOC | CLIP-I: 86.57, DINO: 16.04 (Style Failure)" />
+                <text x="412" y="265" fill="#334155" font-size="10" font-weight="600" text-anchor="middle">ITOC</text>
+
+                <!-- RB-Modulation: (81.69, 19.13) -> (330.4, 233.3) -->
+                <circle cx="330.4" cy="233.3" r="6" fill="#3b82f6" stroke="#fff" stroke-width="1.5" class="chart-pt" data-info="RB-Modulation | CLIP-I: 81.69, DINO: 19.13 (Weak Style)" />
+                <text x="338" y="232" fill="#1e40af" font-size="10" font-weight="700">RB-Modulation</text>
+
+                <!-- StyleID: (77.32, 26.95) -> (257.0, 131.7) -->
+                <circle cx="257.0" cy="131.7" r="5.5" fill="#06b6d4" stroke="#fff" stroke-width="1.5" class="chart-pt" data-info="StyleID | CLIP-I: 77.32, DINO: 26.95" />
+                <text x="265" y="133" fill="#0891b2" font-size="9.5" font-weight="600">StyleID</text>
+
+                <!-- AttenST: (77.17, 24.80) -> (254.5, 159.6) -->
+                <circle cx="254.5" cy="159.6" r="5.5" fill="#0891b2" stroke="#fff" stroke-width="1.5" class="chart-pt" data-info="AttenST | CLIP-I: 77.17, DINO: 24.80" />
+                <text x="210" y="162" fill="#0e7490" font-size="9.5" font-weight="600">AttenST</text>
+
+                <!-- OrthoStyle: (79.87, 23.86) -> (299.8, 171.8) -->
+                <polygon points="299.8,161 303.2,169 311.8,169.5 305,175 307.5,183.5 299.8,178.5 292.1,183.5 294.6,175 287.8,169.5 296.4,169" fill="#7c3aed" stroke="#fff" stroke-width="1.5" filter="url(#glow-star)" class="chart-pt" data-info="OrthoStyle | CLIP-I: 79.87, DINO: 23.86 (Optimal Sweet Spot)" />
+                <text x="302" y="196" fill="#7c3aed" font-size="11" font-weight="900" text-anchor="middle">OrthoStyle</text>
+              </svg>
+              <div class="chart-tooltip" id="tooltip-pareto"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: Interactive Head-to-Head vs. RB-Modulation -->
+        <div class="analysis-card reveal up">
+          <div class="card-header-row">
+            <h3>Head-to-Head vs. RB-Modulation</h3>
+          </div>
+          <p>Relative gains compared directly against RB-Modulation on the same Stable Cascade backbone. Significant boost in style fidelity and texture while reducing leakage.</p>
+          
+          <div class="chart-stage" id="stage-rbm">
+            <!-- Interactive Live Relative Improvement Bars -->
+            <div class="interactive-chart-wrap" id="interactive-rbm">
+              <div class="gain-bars-wrap">
+                <div class="gain-row" data-info="CSD: OrthoStyle 39.49 vs. RB-Modulation 31.38 (+25.8%)">
+                  <span class="gain-label">CSD ↑</span>
+                  <div class="gain-track">
+                    <div class="gain-fill" style="width: 86%;"></div>
+                  </div>
+                  <span class="gain-val">+25.8%</span>
+                </div>
+
+                <div class="gain-row" data-info="DINO Texture Alignment: OrthoStyle 23.86 vs. RB-Modulation 19.13 (+24.8%)">
+                  <span class="gain-label">DINO ↑</span>
+                  <div class="gain-track">
+                    <div class="gain-fill" style="width: 82%;"></div>
+                  </div>
+                  <span class="gain-val">+24.8%</span>
+                </div>
+
+                <div class="gain-row" data-info="LPIPS Distance Reduction: OrthoStyle 56.22 vs. RB-Modulation 68.09 (+17.4% better)">
+                  <span class="gain-label">LPIPS ↓</span>
+                  <div class="gain-track">
+                    <div class="gain-fill emerald" style="width: 58%;"></div>
+                  </div>
+                  <span class="gain-val emerald">+17.4%</span>
+                </div>
+
+                <div class="gain-row" data-info="DCL Leakage Reduction: OrthoStyle 26.41 vs. RB-Modulation 28.81 (+8.3% cleaner)">
+                  <span class="gain-label">DCL ↓</span>
+                  <div class="gain-track">
+                    <div class="gain-fill teal" style="width: 32%;"></div>
+                  </div>
+                  <span class="gain-val teal">+8.3%</span>
+                </div>
+
+                <div class="gain-row" data-info="CLIP-I Content: OrthoStyle 79.87 vs. RB-Modulation 81.69 (-2.2% difference)">
+                  <span class="gain-label">CLIP-I ↑</span>
+                  <div class="gain-track">
+                    <div class="gain-fill slate" style="width: 9%; margin-left: 20px;"></div>
+                  </div>
+                  <span class="gain-val slate">-2.2%</span>
+                </div>
+              </div>
+              <div class="chart-tooltip" id="tooltip-rbm"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: Metric Comparator -->
+        <div class="analysis-card reveal up">
+          <div class="card-header-row">
+            <h3>Metric Comparator</h3>
+          </div>
+          <p>Inspect exact benchmark results across all 5 metrics. Toggle buttons to compare rankings across Stylization Methods and OC-Based Methods.</p>
+          
+          <div class="chart-stage" id="stage-metric">
+            <div class="interactive-chart-wrap" id="interactive-metric">
+              <!-- Metric Selector Tabs -->
+              <div class="comp-tabs">
+                <button class="comp-btn active" data-metric="clip">CLIP-I ↑</button>
+                <button class="comp-btn" data-metric="csd">CSD ↑</button>
+                <button class="comp-btn" data-metric="dino">DINO ↑</button>
+                <button class="comp-btn" data-metric="lpips">LPIPS ↓</button>
+                <button class="comp-btn" data-metric="dcl">DCL ↓</button>
+              </div>
+
+              <!-- Metric Bars Display Container -->
+              <div class="metric-bars-container" id="metric-bars-display">
+                <!-- Dynamically populated by script.js from exact benchmark data -->
+              </div>
+              <div class="chart-tooltip" id="tooltip-metric"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 4: Interactive Pushforward Step Threshold (τ) -->
+        <div class="analysis-card reveal up">
+          <div class="card-header-row">
+            <h3>Pushforward Threshold (τ) Controllability</h3>
+          </div>
+          <p>Flexible inference-time control. As <i>τ</i> increases from 1 to 4, content preservation smoothly increases (+3.50 CLIP-I) and leakage drops (-5.62 DCL).</p>
+          
+          <div class="chart-stage" id="stage-tau">
+            <div class="interactive-chart-wrap" id="interactive-tau">
+              <!-- Tau Step Selector Buttons -->
+              <div class="tau-tabs">
+                <button class="tau-btn active" data-tau="1">τ = 1 (Default)</button>
+                <button class="tau-btn" data-tau="2">τ = 2</button>
+                <button class="tau-btn" data-tau="3">τ = 3</button>
+                <button class="tau-btn" data-tau="4">τ = 4</button>
+              </div>
+
+              <!-- Tau Bars Display Container -->
+              <div class="tau-bars-container" id="tau-bars-display">
+                <!-- Dynamically populated by script.js from exact pushforward data -->
+              </div>
+              <p class="chart-footnote">* Evaluated on 7×7 subset (49 pairs) as specified in paper.</p>
+              <div class="chart-tooltip" id="tooltip-tau"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ QUALITATIVE RESULTS ════════════ -->
+  <section id="results" style="background:#fff;">
+    <div class="container wide">
+      <h2 class="sec-title reveal up">Qualitative Results</h2>
+      <div class="divider-line reveal up"></div>
+      <p class="sec-sub reveal up">Side-by-side visual comparisons against StyleID, AttenST, DiffuseIT, InstantStyle, ITOC, and RB-Modulation under null-prompt inference.</p>
+
+      <div class="fig-block reveal up" data-lb="assets/figures/qualitative_comparison_baselines.webp" data-lb-cap="Fig. 4. Qualitative comparison of OrthoStyle with representative baselines across oil painting, watercolor, sketch, and vibrant graphic textures.">
+        <img src="assets/figures/qualitative_comparison_baselines.webp" alt="Qualitative Baseline Comparison" />
+        <p class="fig-cap"><b>Fig. 4. Qualitative comparisons against baselines.</b> Baselines either over-constrain the style (ITOC), distort anatomy/geometry (InstantStyle, DiffuseIT), or leak style subjects. OrthoStyle faithfully transfers artistic texture while strictly adhering to content structure. <em>Click to zoom.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ ABLATION STUDY ════════════ -->
+  <section id="ablation">
+    <div class="container wide">
+      <h2 class="sec-title reveal up">Ablation Study</h2>
+      <div class="divider-line purple reveal up"></div>
+      <p class="sec-sub reveal up">Systematic component analysis showing the contribution of each module, pushforward threshold, and prompt conditioning level.</p>
+
+      <!-- ─── Subsection 1: Core Components Analysis ─── -->
+      <div class="ablation-block reveal up">
+        <div class="abl-header">
+          <h3>a. Core Components Analysis</h3>
+          <p>To verify the necessity and efficacy of each proposed mechanism, we systematically isolate Semantic Gating, Score-Orthogonal Guidance, Clean-Latent Pushforward, and Blended Style Tokens across all 225 content-style pairs under identical null-prompt inference.</p>
+        </div>
+
+        <!-- Full-Width Table -->
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Configuration</th>
+                <th>CSD ↑</th>
+                <th>DINO ↑</th>
+                <th>CLIP-I ↑</th>
+                <th>LPIPS ↓</th>
+                <th>DCL ↓</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="tr-ours">
+                <td><strong>(A) Full OrthoStyle</strong></td>
+                <td>39.49</td>
+                <td>23.86</td>
+                <td>79.87</td>
+                <td>56.22</td>
+                <td>26.41</td>
+              </tr>
+              <tr>
+                <td>(B) Pure Mean Token (αs = 0.00)</td>
+                <td>23.35</td>
+                <td>17.56</td>
+                <td>85.15</td>
+                <td>55.04</td>
+                <td>20.58</td>
+              </tr>
+              <tr>
+                <td>(C) Raw Style Token (αs = 1.00)</td>
+                <td>52.64</td>
+                <td>34.38</td>
+                <td>68.94</td>
+                <td>67.92</td>
+                <td>44.82</td>
+              </tr>
+              <tr>
+                <td>(D) w/o Score-Orthogonal Guidance</td>
+                <td>46.66</td>
+                <td>30.96</td>
+                <td>70.80</td>
+                <td>70.19</td>
+                <td>43.26</td>
+              </tr>
+              <tr>
+                <td>(E) w/o AdaIN Pushforward</td>
+                <td>65.87</td>
+                <td>49.53</td>
+                <td>58.74</td>
+                <td>74.89</td>
+                <td>64.74</td>
+              </tr>
+              <tr>
+                <td>(F) w/o Semantic Gated Canny</td>
+                <td>44.98</td>
+                <td>30.36</td>
+                <td>71.13</td>
+                <td>69.88</td>
+                <td>42.23</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">Quantitative ablation on core components across all 225 pairs under null-prompt inference.</p>
+
+        <!-- Figure 6 -->
+        <div class="fig-block" data-lb="assets/figures/ablation_components.webp" data-lb-cap="Fig. 6. Qualitative ablation study comparing (A) full OrthoStyle with variants (B)-(F).">
+          <img src="assets/figures/ablation_components.webp" alt="Visual Ablation of Core Components" />
+          <p class="fig-cap"><b>Fig. 6. Qualitative component analysis.</b> Visual comparison between full OrthoStyle (A) and ablated variants (B)–(F). <em>Click to zoom.</em></p>
+        </div>
+
+        <!-- Horizontal Annotation Cards directly under Image -->
+        <div class="abl-notes-grid">
+          <div class="abl-note-card">
+            <h4><span>(A)</span> Full OrthoStyle</h4>
+            <p>Optimal Pareto balance: renders rich artistic textures without semantic reference leakage or structural tearing.</p>
+          </div>
+          <div class="abl-note-card">
+            <h4><span>(B)</span> Pure Mean Token</h4>
+            <p>Suppresses style variance, causing severe under-stylization (CSD 23.35, DINO 17.56) despite high content retention.</p>
+          </div>
+          <div class="abl-note-card">
+            <h4><span>(C)</span> Raw Style Token</h4>
+            <p>Causes catastrophic reference subject leakage (DCL spikes to 44.82, CLIP-I drops to 68.94) as style subjects bleed directly.</p>
+          </div>
+          <div class="abl-note-card">
+            <h4><span>(D)</span> w/o Score Guidance</h4>
+            <p>Unconstrained DINO gradients collide with score direction, destabilizing the trajectory and degrading geometry.</p>
+          </div>
+          <div class="abl-note-card">
+            <h4><span>(E)</span> w/o AdaIN Pushforward</h4>
+            <p>Content collapses severely (CLIP-I drops to 58.74, DCL surges to 64.74). Early pushforward is essential for color harmony.</p>
+          </div>
+          <div class="abl-note-card">
+            <h4><span>(F)</span> w/o Semantic Gating</h4>
+            <p>Noisy background Canny edges over-constrain the generation, degrading content retention and elevating leakage.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Subsection 2: Controllability via Pushforward Step Threshold ─── -->
+      <div class="ablation-block reveal up">
+        <div class="abl-header">
+          <h3>b. Pushforward Step Threshold Controllability</h3>
+          <p>We evaluate the effect of varying the clean-latent pushforward threshold <i>τ</i> ∈ {1, 2, 3, 4}. Intervening on Tweedie-predicted latents for additional initial steps progressively strengthens content geometry and suppresses leakage at inference time without network retraining.</p>
+        </div>
+
+        <!-- Full-Width Table -->
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Pushforward Threshold</th>
+                <th>CSD ↑</th>
+                <th>DINO ↑</th>
+                <th>CLIP-I ↑</th>
+                <th>LPIPS ↓</th>
+                <th>DCL ↓</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="tr-ours">
+                <td><strong>τ = 1 (Default setting)</strong></td>
+                <td>45.14</td>
+                <td>27.34</td>
+                <td>75.90</td>
+                <td>58.55</td>
+                <td>27.27</td>
+              </tr>
+              <tr>
+                <td>τ = 2</td>
+                <td>41.57</td>
+                <td>25.51</td>
+                <td>76.50</td>
+                <td>56.61</td>
+                <td>25.50</td>
+              </tr>
+              <tr>
+                <td>τ = 3</td>
+                <td>40.40</td>
+                <td>24.54</td>
+                <td>78.44</td>
+                <td>55.51</td>
+                <td>23.52</td>
+              </tr>
+              <tr>
+                <td>τ = 4</td>
+                <td>37.07</td>
+                <td>23.27</td>
+                <td>79.40</td>
+                <td>54.22</td>
+                <td>21.65</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          * <strong>Dataset Note:</strong> The pushforward threshold sweep is evaluated specifically on a representative 7 content × 7 style subset (49 pairs) to systematically profile the step parameter.
+        </p>
+
+        <div class="slider-insight-box">
+          <strong>Flexible Inference-Time Control:</strong> As <i>τ</i> increases from 1 to 4, content preservation (CLIP-I) monotonically increases from 75.90 to 79.40 and semantic leakage (DCL) drops from 27.27 to 21.65. This provides users with an intuitive, zero-training control slider between stylized artistic intensity (<i>τ</i> = 1) and photorealistic structural fidelity (<i>τ</i> = 4).
+        </div>
+      </div>
+
+      <!-- ─── Subsection 3: Prompt Conditioning Levels ─── -->
+      <div class="ablation-block reveal up">
+        <div class="abl-header">
+          <h3>c. Effect of Prompt Conditioning Levels</h3>
+          <p>While OrthoStyle is designed primarily for null-prompt reference stylization, we examine its robustness and controllability under varying prompt conditioning levels: Null prompt, Object prompt, and Style prompt across all 225 image pairs.</p>
+        </div>
+
+        <!-- Full-Width Table with Null Level Row -->
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Prompt Conditioning Level</th>
+                <th>Prompt Template</th>
+                <th>CSD ↑</th>
+                <th>DINO ↑</th>
+                <th>CLIP-I ↑</th>
+                <th>LPIPS ↓</th>
+                <th>DCL ↓</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="tr-ours">
+                <td><strong>Prompt: Null Level (OrthoStyle Default)</strong></td>
+                <td><code>""</code> (Null prompt)</td>
+                <td class="second-best">39.49</td>
+                <td class="second-best">23.86</td>
+                <td class="second-best">79.87</td>
+                <td class="second-best">56.22</td>
+                <td class="second-best">26.41</td>
+              </tr>
+              <tr>
+                <td><strong>Prompt: Object Level</strong></td>
+                <td><code>"a &lt;object&gt;"</code></td>
+                <td>29.10</td>
+                <td>18.92</td>
+                <td class="best">★ 83.82</td>
+                <td class="best">★ 55.23</td>
+                <td class="best">★ 21.57</td>
+              </tr>
+              <tr>
+                <td><strong>Prompt: Style Level</strong></td>
+                <td><code>"a &lt;object&gt; in &lt;style&gt; style"</code></td>
+                <td class="best">★ 40.23</td>
+                <td class="best">★ 25.21</td>
+                <td>78.01</td>
+                <td>59.98</td>
+                <td>30.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">Quantitative prompt conditioning sweep across all 225 pairs. ★ = Best, <u>Underline</u> = Second-best.</p>
+
+        <!-- Figure 7 -->
+        <div class="fig-block" data-lb="assets/figures/ablation_prompt_levels.webp" data-lb-cap="Fig. 7. Stylization stability under diverse prompt-level and it even performs well without needing a prompt (null prompt). Visual comparison across null prompt, object prompt, and style prompt conditioning. Click to zoom.">
+          <img src="assets/figures/ablation_prompt_levels.webp" alt="Ablation across Prompt Conditioning Levels" />
+          <p class="fig-cap"><b>Fig. 7. Stylization stability under diverse prompt-level and it even performs well without needing a prompt (null prompt).</b> Visual comparison across null prompt, object prompt, and style prompt conditioning. <em>Click to zoom.</em></p>
+        </div>
+
+        <div class="abl-notes-grid" style="grid-template-columns: repeat(3, 1fr);">
+          <div class="abl-note-card">
+            <h4><span>✦</span> Null Prompt (Balanced)</h4>
+            <p>Delivers the optimal balance between brushwork richness and structural retention without textual bias.</p>
+          </div>
+          <div class="abl-note-card">
+            <h4><span>✦</span> Object Prompt (Content Focus)</h4>
+            <p>Explicit textual object cues boost content retention (CLIP-I 83.82, DCL 21.57) at the cost of style intensity.</p>
+          </div>
+          <div class="abl-note-card">
+            <h4><span>✦</span> Style Prompt (Texture Focus)</h4>
+            <p>Reinforces artistic textures and color saturation (CSD 40.23, DINO 25.21) through joint visual and text guidance.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════ BIBTEX SECTION ════════════ -->
+  <section id="bibtex" style="background:#fff;">
+    <div class="container">
+      <h2 class="sec-title reveal up">BibTeX Citation</h2>
+      <div class="divider-line reveal up"></div>
+      <div class="bibtex-block reveal up">
+        <button class="copy-btn" id="copy-bib-btn" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          <span id="copy-btn-text">Copy BibTeX</span>
+        </button>
+<span class="k">@inproceedings</span>{<span class="v">nguyen2026orthostyle</span>,
+  <span class="k">title</span>     = {<span class="s">OrthoStyle: Manifold-Preserving Training-Free Style Transfer via Score-Orthogonal Guidance</span>},
+  <span class="k">author</span>    = {<span class="s">Nguyen, Minh Nhat and Pham, Dang Quang and Vo, Thien Phuc and Dang, Phuc Loc and Le, Duc Khoan</span>},
+  <span class="k">booktitle</span> = {<span class="s">The 15th International Symposium on Information and Communication Technology (SOICT)</span>},
+  <span class="k">note</span>      = {<span class="s">Oral Presentation</span>},
+  <span class="k">year</span>      = {<span class="s">2026</span>}
+}
+      </div>
+    </div>
+  </section>
+
+  <!-- Acknowledgments & Footer -->
+  <div class="ack">
+    <div class="container">
+      <p>
+        © 2026 OrthoStyle Authors. Licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>OrthoStyle · SOICT 2026 Oral Presentation · University of Science, VNU-HCM · 2026</p>
+    </div>
+  </footer>
+
+  <!-- ════════════ FULL-SCREEN LIGHTBOX MODAL ════════════ -->
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Image Zoom View">
+    <button id="lb-close" aria-label="Close Zoom View">✕</button>
+    <div id="lb-nav">
+      <button class="lb-btn" id="lb-prev" aria-label="Previous Image">‹</button>
+      <button class="lb-btn" id="lb-next" aria-label="Next Image">›</button>
+    </div>
+    <img id="lb-img" src="" alt="Zoomed view" />
+    <div id="lb-cap"></div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="data.js?v=6"></script>
+  <script src="script.js?v=6"></script>
+</body>
+</html>

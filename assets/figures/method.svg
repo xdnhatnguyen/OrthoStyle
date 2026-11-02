@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 680">
+<rect width="1600" height="680" rx="30" fill="#f7f8fb"/>
+<rect x="48" y="48" width="1504" height="584" rx="22" fill="#fff" stroke="#dde1e8" stroke-width="3"/>
+<text x="800" y="300" text-anchor="middle" font-family="Arial,sans-serif" font-size="58" font-weight="700" fill="#23252d">METHOD OVERVIEW</text>
+<text x="800" y="374" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" fill="#6a6f7c">Input  →  Decomposition / Guidance  →  Diffusion  →  Stylized Output</text>
+<text x="800" y="470" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" fill="#999ea9">Replace assets/figures/method.svg with your paper figure.</text>
+</svg>
